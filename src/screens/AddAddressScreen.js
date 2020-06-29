@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import {Card} from 'react-native-paper'
 export default class AddAdress extends Component {
   constructor(props) {
     super(props);
@@ -12,6 +12,12 @@ export default class AddAdress extends Component {
       return (
         <View style={Style.container}>
           <View style={Style.textView}>
+          <Icon
+              name="md-add-circle"
+              size={30}
+              color={'#000000'}
+              onPress={() => this.props.navigation.navigate('MapScreen')}
+            />
             <Text style={Style.textColor}>Add an address!</Text>
           </View>
         </View>
@@ -28,10 +34,10 @@ export default class AddAdress extends Component {
             />
             <Text style={Style.textColor}>Add an address!</Text>
           </View>
-          <View style={Style.addressCard}>
+          <Card style={Style.addressCard}>
           <Text style={Style.addressText}>{this.props.route.params.addressLine1}</Text>
           <Text style={Style.addressText}>{this.props.route.params.addressLine2}</Text>
-          </View>
+          </Card>
         </View>
       );
     }
@@ -54,7 +60,8 @@ const Style = StyleSheet.create({
       backgroundColor:'#808080',
       borderRadius:10,
       padding:24,
-      marginTop:10
+      marginTop:10,
+      elevation:2
   },
   addressText:{
       fontSize:15,

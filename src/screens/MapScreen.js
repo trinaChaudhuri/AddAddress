@@ -158,7 +158,7 @@ export default class MapScreen extends Component {
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>Delivery Location</Text>
-            <Icon name="md-search" size={24} />
+            {/* <Icon name="md-search" size={24} /> */}
           </View>
 
           <TouchableHighlight
