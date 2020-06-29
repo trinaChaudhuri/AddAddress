@@ -69,9 +69,6 @@ export default class MapScreen extends Component {
     } catch (err) {
       console.log(err);
     }
-    console.log(
-      `event.nativeEvent.text: ${JSON.stringify(event.nativeEvent.text)}`,
-    );
   };
   handleChangeaddressLine2 = event => {
     try {
@@ -80,9 +77,6 @@ export default class MapScreen extends Component {
     } catch (err) {
       console.log(err);
     }
-    console.log(
-      `event.nativeEvent.text: ${JSON.stringify(event.nativeEvent.text)}`,
-    );
   };
   addressBlock = () => {
     return (

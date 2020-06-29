@@ -8,17 +8,10 @@ export default class AddAdress extends Component {
   }
 
   render() {
-    console.log('hello', this.props.route.params);
     if (this.props.route.params == undefined) {
       return (
         <View style={Style.container}>
           <View style={Style.textView}>
-            <Icon
-              name="md-add-circle"
-              size={30}
-              color={'#000000'}
-              onPress={() => this.props.navigation.navigate('MapScreen')}
-            />
             <Text style={Style.textColor}>Add an address!</Text>
           </View>
         </View>
