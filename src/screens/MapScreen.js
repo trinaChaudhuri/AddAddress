@@ -145,7 +145,7 @@ export default class MapScreen extends Component {
               value={this.state.addressLine2}
               onChange={this.handleChangeaddressLine2}
             />
-            <Text style={{marginTop: 10}}>CHOOSE A LABEL</Text>
+            <Text style={{marginTop: 10}}>Choose a Label</Text>
             <View
               style={{
                 flexDirection: 'row',
