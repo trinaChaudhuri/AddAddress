@@ -43,9 +43,9 @@ export default class MapScreen extends Component {
   googleplaces = () => {
     this.setState({searchbar: !this.state.searchbar});
   };
-  requestLocationPermission = async() => {
+  requestLocationPermission = async () => {
     while (Platform.OS == 'android') {
-      var response =  await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
       if (response === 'granted') {
         this.locateCurrentPosition();
       }
@@ -132,7 +132,7 @@ export default class MapScreen extends Component {
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text>DELIVERY LOCATION</Text>
             </View>
-            <Text style={{marginTop:15}}>DETAILS</Text>
+            <Text style={{marginTop: 15}}>DETAILS</Text>
             <TextInput
               placeholder="Door no,Floor,Building Name"
               style={Styles.placeholder}
@@ -145,39 +145,57 @@ export default class MapScreen extends Component {
               value={this.state.addressLine2}
               onChange={this.handleChangeaddressLine2}
             />
-            <Text style={{marginTop:10}}>CHOOSE A LABEL</Text>
+            <Text style={{marginTop: 10}}>CHOOSE A LABEL</Text>
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 marginTop: 10,
               }}>
-              <TouchableHighlight onPress={this.home} underlayColor="transparent">
+              <TouchableHighlight
+                onPress={this.home}
+                underlayColor="transparent">
                 <View
-                  style={[this.state.home==""?Styles.label:Styles.labelSelected]}>
+                  style={[
+                    this.state.home == '' ? Styles.label : Styles.labelSelected,
+                  ]}>
                   <Icon name="md-home" size={18} />
-                  <Text style={{paddingLeft:5}}>HOME</Text>
+                  <Text style={{paddingLeft: 5}}>HOME</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={this.work} underlayColor="transparent">
+              <TouchableHighlight
+                onPress={this.work}
+                underlayColor="transparent">
                 <View
-                  style={[this.state.work==""?Styles.label:Styles.labelSelected]}>
+                  style={[
+                    this.state.work == '' ? Styles.label : Styles.labelSelected,
+                  ]}>
                   <Icon name="md-briefcase" size={18} />
-                  <Text style={{paddingLeft:5}}>WORK</Text>
+                  <Text style={{paddingLeft: 5}}>WORK</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={this.other} underlayColor="transparent">
+              <TouchableHighlight
+                onPress={this.other}
+                underlayColor="transparent">
                 <View
-                  style={[this.state.other==""?Styles.label:Styles.labelSelected]}>
+                  style={[
+                    this.state.other == ''
+                      ? Styles.label
+                      : Styles.labelSelected,
+                  ]}>
                   <Icon name="md-globe" size={18} />
-                  <Text style={{paddingLeft:5}}>OTHER</Text>
+                  <Text style={{paddingLeft: 5}}>OTHER</Text>
                 </View>
               </TouchableHighlight>
             </View>
             <>
               {this.state.other && (
                 <View>
-                  <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      // justifyContent: 'space-between',
+                    }}>
                     <TextInput
                       placeholder="Label"
                       style={Styles.placeholderLabel}
@@ -186,10 +204,10 @@ export default class MapScreen extends Component {
                     />
                     <TextInput
                       placeholder="Number"
-                      style={Styles.placeholderLabel}
+                      style={Styles.placeholderNumber}
                       onChange={this.number}
                       value={this.state.number}
-                      keyboardType='phone-pad'
+                      keyboardType="phone-pad"
                     />
                   </View>
                   <TextInput
@@ -208,9 +226,9 @@ export default class MapScreen extends Component {
                   addressLine2: this.state.addressLine2,
                   home: this.state.home,
                   work: this.state.work,
-                  label:this.state.label,
-                  number:this.state.number,
-                  name:this.state.name
+                  label: this.state.label,
+                  number: this.state.number,
+                  name: this.state.name,
                 })
               }
               underlayColor="transparent">
@@ -303,7 +321,10 @@ export default class MapScreen extends Component {
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text>DELIVERY LOCATION</Text>
-            <Icon name="md-search" size={24} onPress={this.googleplaces} />
+            <View style={{flexDirection: 'row'}}>
+              <Icon name="md-search" size={20} onPress={this.googleplaces} color="#f4511e"/>
+              <Text style={{color:'#f4511e'}}>Search</Text>
+            </View>
           </View>
 
           <TouchableHighlight
@@ -344,12 +365,20 @@ const Styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#D3D3D3',
   },
-  placeholderLabel:{
+  placeholderLabel: {
     borderBottomColor: '#808080',
     borderBottomWidth: 0.5,
     borderColor: '#D3D3D3',
+    width:150
   },
-  label:{
+  placeholderNumber: {
+    borderBottomColor: '#808080',
+    borderBottomWidth: 0.5,
+    borderColor: '#D3D3D3',
+    width:150,
+    marginLeft:20
+  },
+  label: {
     flexDirection: 'row',
     borderColor: '#000',
     borderWidth: 1,
@@ -358,7 +387,7 @@ const Styles = StyleSheet.create({
     width: 80,
     justifyContent: 'center',
   },
-  labelSelected:{
+  labelSelected: {
     flexDirection: 'row',
     borderColor: '#FF0000',
     borderWidth: 1,
@@ -366,5 +395,5 @@ const Styles = StyleSheet.create({
     height: 30,
     width: 80,
     justifyContent: 'center',
-  }
+  },
 });
