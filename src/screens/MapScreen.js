@@ -10,9 +10,10 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Geolocation from '@react-native-community/geolocation';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {request, PERMISSIONS} from 'react-native-permissions';
-import {deviceHeight} from '../constant';
+import {deviceHeight, deviceWidth} from '../constant';
 
 export default class MapScreen extends Component {
   constructor(props) {
@@ -27,15 +28,25 @@ export default class MapScreen extends Component {
       viewOne: true,
       addressLine1: '',
       addressLine2: '',
+      searchbar: false,
+      home: '',
+      work: '',
+      label: '',
+      number: '',
+      name: '',
+      other: false,
     };
   }
   componentDidMount() {
     this.requestLocationPermission();
   }
-
-  requestLocationPermission = async () => {
+  googleplaces = () => {
+    this.setState({searchbar: !this.state.searchbar});
+    console.log('aaaaa');
+  };
+  requestLocationPermission = async() => {
     while (Platform.OS == 'android') {
-      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
+      var response =  await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
       if (response === 'granted') {
         this.locateCurrentPosition();
       }
@@ -78,6 +89,27 @@ export default class MapScreen extends Component {
       console.log(err);
     }
   };
+  label = event => {
+    event.persist();
+    this.setState({label: event.nativeEvent.text});
+  };
+  number = event => {
+    event.persist();
+    this.setState({number: event.nativeEvent.text});
+  };
+  name = event => {
+    event.persist();
+    this.setState({name: event.nativeEvent.text});
+  };
+  home = () => {
+    this.setState({home: 'Home'});
+  };
+  work = () => {
+    this.setState({work: 'Work'});
+  };
+  other = () => {
+    this.setState({other: !this.state.other});
+  };
   addressBlock = () => {
     return (
       <ScrollView>
@@ -99,9 +131,9 @@ export default class MapScreen extends Component {
           <View style={{padding: 24}}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text>Delivery Location</Text>
+              <Text>DELIVERY LOCATION</Text>
             </View>
-            <Text>Details</Text>
+            <Text style={{marginTop:15}}>DETAILS</Text>
             <TextInput
               placeholder="Door no,Floor,Building Name"
               style={Styles.placeholder}
@@ -114,11 +146,96 @@ export default class MapScreen extends Component {
               value={this.state.addressLine2}
               onChange={this.handleChangeaddressLine2}
             />
+            <Text style={{marginTop:10}}>CHOOSE A LABEL</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 10,
+              }}>
+              <TouchableHighlight onPress={this.home}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    borderColor: '#000',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    height: 30,
+                    width: 80,
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="md-home" size={18} />
+                  <Text style={{paddingLeft:5}}>HOME</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={this.work}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    borderColor: '#000',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    width: 80,
+                    height: 30,
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="md-briefcase" size={18} />
+                  <Text style={{paddingLeft:5}}>WORK</Text>
+                </View>
+              </TouchableHighlight>
+              <TouchableHighlight onPress={this.other}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    borderColor: '#000',
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    width: 80,
+                    height: 30,
+                    justifyContent: 'center',
+                  }}>
+                  <Icon name="md-globe" size={18} />
+                  <Text style={{paddingLeft:5}}>OTHER</Text>
+                </View>
+              </TouchableHighlight>
+            </View>
+            <>
+              {this.state.other && (
+                <View>
+                  <View style={{flexDirection: 'row',justifyContent:'space-between'}}>
+                    <TextInput
+                      placeholder="Label"
+                      style={Styles.placeholderLabel}
+                      onChange={this.label}
+                      value={this.state.label}
+                    />
+                    <TextInput
+                      placeholder="Number"
+                      style={Styles.placeholderLabel}
+                      onChange={this.number}
+                      value={this.state.number}
+                      keyboardType='phone-pad'
+                    />
+                  </View>
+                  <TextInput
+                    placeholder="Name"
+                    style={Styles.placeholder}
+                    onChange={this.name}
+                    value={this.state.name}
+                  />
+                </View>
+              )}
+            </>
             <TouchableHighlight
               onPress={() =>
                 this.props.navigation.navigate('AddAdress', {
                   addressLine1: this.state.addressLine1,
                   addressLine2: this.state.addressLine2,
+                  home: this.state.home,
+                  work: this.state.work,
+                  label:this.state.label,
+                  number:this.state.number,
+                  name:this.state.name
                 })
               }
               underlayColor="transparent">
@@ -129,7 +246,7 @@ export default class MapScreen extends Component {
                     fontSize: 20,
                     fontFamily: 'Roboto-Bold',
                   }}>
-                  Add Address
+                  ADD ADDRESS
                 </Text>
               </View>
             </TouchableHighlight>
@@ -155,10 +272,63 @@ export default class MapScreen extends Component {
             title={'Bangalore'}
           />
         </MapView>
+        <>
+          {this.state.searchbar && (
+            <View style={{position: 'absolute', width: deviceWidth}}>
+              <GooglePlacesAutocomplete
+                placeholder="Search"
+                minLength={2} // minimum length of text to search
+                autoFocus={false}
+                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                listViewDisplayed="true" // true/false/undefined
+                fetchDetails={true}
+                renderDescription={row => row.description} // custom description render
+                onPress={(data, details = null) => {
+                  console.log(data);
+                  console.log(details);
+                }}
+                getDefaultValue={() => {
+                  return ''; // text input default value
+                }}
+                query={{
+                  // available options: https://developers.google.com/places/web-service/autocomplete
+                  key: 'AIzaSyBULtxI-73SoqLwlw9WbqHtoFt-Os3OmBw',
+                  language: 'en', // language of the results
+                  types: '(cities)', // default: 'geocode'
+                }}
+                styles={{
+                  description: {
+                    fontWeight: 'bold',
+                  },
+                  predefinedPlacesDescription: {
+                    color: '#1faadb',
+                  },
+                }}
+                onFail={error => console.log('err on fail', error)}
+                nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                GoogleReverseGeocodingQuery={
+                  {
+                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                  }
+                }
+                GooglePlacesSearchQuery={{
+                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                  rankby: 'distance',
+                  types: 'food',
+                }}
+                filterReverseGeocodingByTypes={[
+                  'locality',
+                  'administrative_area_level_3',
+                ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                debounce={200}
+              />
+            </View>
+          )}
+        </>
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>Delivery Location</Text>
-            {/* <Icon name="md-search" size={24} /> */}
+            <Text>DELIVERY LOCATION</Text>
+            <Icon name="md-search" size={24} onPress={this.googleplaces} />
           </View>
 
           <TouchableHighlight
@@ -171,7 +341,7 @@ export default class MapScreen extends Component {
                   fontSize: 20,
                   fontFamily: 'Roboto-Bold',
                 }}>
-                Proceed
+                PROCEED
               </Text>
             </View>
           </TouchableHighlight>
@@ -197,7 +367,12 @@ const Styles = StyleSheet.create({
   },
   placeholder: {
     borderBottomColor: '#808080',
-    borderBottomWidth: 2,
-    borderStyle: 'dashed',
+    borderBottomWidth: 0.5,
+    borderColor: '#D3D3D3',
+  },
+  placeholderLabel:{
+    borderBottomColor: '#808080',
+    borderBottomWidth: 0.5,
+    borderColor: '#D3D3D3',
   },
 });
