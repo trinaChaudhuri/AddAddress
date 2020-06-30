@@ -46,9 +46,9 @@ export default class AddAdress extends Component {
         <View style={Style.container}>
           <View style={Style.textView}>
             <Icon
-              name="md-add-circle"
-              size={20}
-              color={'#000000'}
+              name="md-add"
+              size={30}
+              color={'#f4511e'}
               onPress={() => this.props.navigation.navigate('MapScreen')}
               
             />

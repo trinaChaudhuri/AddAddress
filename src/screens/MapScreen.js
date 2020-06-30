@@ -153,47 +153,23 @@ export default class MapScreen extends Component {
                 justifyContent: 'space-between',
                 marginTop: 10,
               }}>
-              <TouchableHighlight onPress={this.home}>
+              <TouchableHighlight onPress={this.home} underlayColor="transparent">
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    borderColor: '#000',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    height: 30,
-                    width: 80,
-                    justifyContent: 'center',
-                  }}>
+                  style={[this.state.home==""?Styles.label:Styles.labelSelected]}>
                   <Icon name="md-home" size={18} />
                   <Text style={{paddingLeft:5}}>HOME</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={this.work}>
+              <TouchableHighlight onPress={this.work} underlayColor="transparent">
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    borderColor: '#000',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    width: 80,
-                    height: 30,
-                    justifyContent: 'center',
-                  }}>
+                  style={[this.state.work==""?Styles.label:Styles.labelSelected]}>
                   <Icon name="md-briefcase" size={18} />
                   <Text style={{paddingLeft:5}}>WORK</Text>
                 </View>
               </TouchableHighlight>
-              <TouchableHighlight onPress={this.other}>
+              <TouchableHighlight onPress={this.other} underlayColor="transparent">
                 <View
-                  style={{
-                    flexDirection: 'row',
-                    borderColor: '#000',
-                    borderWidth: 1,
-                    borderRadius: 5,
-                    width: 80,
-                    height: 30,
-                    justifyContent: 'center',
-                  }}>
+                  style={[this.state.other==""?Styles.label:Styles.labelSelected]}>
                   <Icon name="md-globe" size={18} />
                   <Text style={{paddingLeft:5}}>OTHER</Text>
                 </View>
@@ -358,7 +334,6 @@ const Styles = StyleSheet.create({
   },
   proceed: {
     backgroundColor: '#f4511e',
-
     height: 40,
     alignItems: 'center',
     marginTop: 28,
@@ -375,4 +350,22 @@ const Styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderColor: '#D3D3D3',
   },
+  label:{
+    flexDirection: 'row',
+    borderColor: '#000',
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 30,
+    width: 80,
+    justifyContent: 'center',
+  },
+  labelSelected:{
+    flexDirection: 'row',
+    borderColor: '#FF0000',
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 30,
+    width: 80,
+    justifyContent: 'center',
+  }
 });
