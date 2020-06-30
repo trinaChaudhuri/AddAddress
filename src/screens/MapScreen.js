@@ -42,7 +42,6 @@ export default class MapScreen extends Component {
   }
   googleplaces = () => {
     this.setState({searchbar: !this.state.searchbar});
-    console.log('aaaaa');
   };
   requestLocationPermission = async() => {
     while (Platform.OS == 'android') {

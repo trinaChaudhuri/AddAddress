@@ -52,7 +52,7 @@ export default class AddAdress extends Component {
               onPress={() => this.props.navigation.navigate('MapScreen')}
               
             />
-            <Text style={Style.textColor}>Add an address!</Text>
+            <Text style={Style.textColor}>Add New Address</Text>
           </View>
           <Card style={Style.addressCard}>
             <>{this.addressCard()}</>
