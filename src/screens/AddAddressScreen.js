@@ -1,14 +1,31 @@
 import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Card} from 'react-native-paper';
 import {deviceWidth, deviceHeight} from '../constant';
 
 export default class AddAdress extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      deleted: false,
+    };
   }
-
+  componentDidMount(){
+    this.updateDelete;
+  }
+  updateDelete=()=>{
+    this.setState({
+      deleted:false
+    })
+  }
+  componentWillUnmount(){
+    this.updateDelete;
+  }
+  delete = () => {
+    this.setState({
+      deleted:!this.state.deleted
+    })
+  };
   addressCard = () => {
     if (this.props.route.params.home) {
       return <Text style={Style.label}>{this.props.route.params.home}</Text>;
@@ -33,64 +50,79 @@ export default class AddAdress extends Component {
       );
   };
   render() {
-    if (this.props.route.params == undefined) {
-      return (
-        <View style={Style.container}>
-          <View style={Style.addAddressHeader}>
-            <Text style={Style.myAddresses}>My Addresses</Text>
-          </View>
-          <View style={Style.textView}>
-            <Icon
-              name="md-add"
-              size={22}
-              color={'#f4511e'}
-              onPress={() => this.props.navigation.navigate('MapScreen')}
-            />
-            <Text style={Style.textColor}>Add New Address</Text>
-          </View>
+    console.log('params',this.props.route.params,'deleted',this.state.deleted)
+    return (
+      <View style={Style.container}>
+        <View style={Style.addAddressHeader}>
+          <Text style={Style.myAddresses}>My Addresses</Text>
         </View>
-      );
-    } else {
-      return (
-        <View style={Style.container}>
-          <View style={Style.addAddressHeader}>
-            <Text style={Style.myAddresses}>My Addresses</Text>
-          </View>
-          <View style={Style.textView}>
-            <Icon
-              name="md-add"
-              size={22}
-              color={'#f4511e'}
-              onPress={() => this.props.navigation.navigate('MapScreen')}
-            />
+        <View style={Style.textView}>
+          <Icon
+            name="md-add"
+            size={22}
+            color={'#f4511e'}
+            onPress={() => this.props.navigation.navigate('MapScreen')}
+          />
+          <TouchableHighlight
+            onPress={() => this.props.navigation.navigate('MapScreen')} underlayColor="transparent">
             <Text style={Style.textColor}>Add New Address</Text>
-          </View>
-          <View style={Style.addressCard}>
-            <>{this.addressCard()}</>
-            <View style={{paddingTop: 10}}>
-              <Text style={Style.addressText}>
-                {this.props.route.params.addressLine1.charAt(0).toUpperCase() +
-                  this.props.route.params.addressLine1.slice(1)}
-              </Text>
-              <Text style={Style.addressText}>
-                {this.props.route.params.addressLine2.charAt(0).toUpperCase() +
-                  this.props.route.params.addressLine2.slice(1)}
-              </Text>
+          </TouchableHighlight>
+        </View>
+
+        <>
+          {this.props.route.params && !this.state.deleted  && (
+            <View style={Style.addressCard}>
+              <>{this.addressCard()}</>
+              <View style={{paddingTop: 10}}>
+                <Text style={Style.addressText}>
+                  {this.props.route.params.addressLine1
+                    .charAt(0)
+                    .toUpperCase() +
+                    this.props.route.params.addressLine1.slice(1)}
+                </Text>
+                <Text style={Style.addressText}>
+                  {this.props.route.params.addressLine2
+                    .charAt(0)
+                    .toUpperCase() +
+                    this.props.route.params.addressLine2.slice(1)}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  paddingLeft: 15,
+                  paddingTop: 10,
+                }}>
+                <View style={{flexDirection: 'row'}}>
+                  <Icon name="md-create" color={'#808080'} size={20} onPress={()=>this.props.navigation.navigate('SaveAddress')} />
+                  <Text style={{color: '#808080', paddingLeft: 5}}>Edit</Text>
+                </View>
+                <View style={{flexDirection: 'row', paddingLeft: 25}}>
+                  <Icon
+                    name="md-trash"
+                    color={'#808080'}
+                    size={20}
+                    onPress={this.delete}
+                  />
+                  <Text style={{color: '#808080', paddingLeft: 5}}>Delete</Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  borderBottomColor: '#D3D3D3',
+                  borderBottomWidth: 1,
+                  paddingTop: 15,
+                  marginLeft: 15,
+                }}
+              />
             </View>
-            <View
-              style={{
-                borderBottomColor: '#D3D3D3',
-                borderBottomWidth: 1,
-                paddingTop: 15,
-                marginLeft: 15,
-              }}
-            />
-          </View>
-        </View>
-      );
-    }
+          )}
+        </>
+      </View>
+    );
   }
 }
+
 const Style = StyleSheet.create({
   textColor: {
     fontFamily: 'Ubuntu',
