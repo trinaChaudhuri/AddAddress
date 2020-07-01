@@ -63,7 +63,7 @@ export default class MapScreen extends Component {
         this.setState({initialPosition});
       },
       error => console.log(error.message),
-      {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
+      {enableHighAccuracy: true, timeout: 2000, maximumAge: 3600000},
     );
   };
   // componentWillUnmount() {
@@ -337,7 +337,7 @@ export default class MapScreen extends Component {
                 }}
                 query={{
                   // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: 'AIzaSyBULtxI-73SoqLwlw9WbqHtoFt-Os3OmBw',
+                  key: 'AIzaSyClIZfAUWZCJz75gwiPOWGWdP4uo52X87c',
                   language: 'en', // language of the results
                   types: '(cities)', // default: 'geocode'
                 }}
@@ -351,11 +351,11 @@ export default class MapScreen extends Component {
                 }}
                 onFail={error => console.log('err on fail', error)}
                 nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                GoogleReverseGeocodingQuery={
-                  {
-                    // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                  }
-                }
+                // GoogleReverseGeocodingQuery={
+                //   {
+                //     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                //   }
+                // }
                 GooglePlacesSearchQuery={{
                   // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
                   rankby: 'distance',
