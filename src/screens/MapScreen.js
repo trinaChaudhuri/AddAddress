@@ -20,10 +20,10 @@ export default class MapScreen extends Component {
     super(props);
     this.state = {
       initialPosition: {
-        latitude: 12.9716,
-        longitude: 77.5946,
-        latitudeDelta: 0.001,
-        longitudeDelta: 0.001,
+        latitude: 37.421998333333335,
+        longitude: -122.08400000000002,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421,
       },
       viewOne: true,
       addressLine1: '',
@@ -66,7 +66,9 @@ export default class MapScreen extends Component {
       {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000},
     );
   };
-
+  // componentWillUnmount() {
+  //   this.locateCurrentPosition();
+  // }
   proceed = () => {
     this.setState({
       viewOne: false,
@@ -113,11 +115,24 @@ export default class MapScreen extends Component {
     return (
       <ScrollView>
         <View>
+          <View style={{flexDirection: 'row', paddingTop: 10, paddingLeft: 15}}>
+            <Icon
+              name="md-arrow-back"
+              size={25}
+              onPress={() => this.props.navigation.navigate('AddAdress')}
+            />
+            <Text style={{fontFamily: 'Ubuntu', fontSize: 20, paddingLeft: 10}}>
+              Add Address
+            </Text>
+          </View>
           <MapView
             showsUserLocation={true}
+            userLocationPriority='high'
+            followsUserLocation={true}
+            showsMyLocationButton	={true}
             provider={PROVIDER_GOOGLE}
             ref={map => (this._map = map)}
-            style={Styles.map}
+            style={Styles.mapAddress}
             initialRegion={this.state.initialPosition}>
             <Marker
               coordinate={{
@@ -130,9 +145,11 @@ export default class MapScreen extends Component {
           <View style={{padding: 24}}>
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text>DELIVERY LOCATION</Text>
+              <Text style={{fontFamily: 'Ubuntu', fontSize: 15}}>
+                DELIVERY LOCATION
+              </Text>
             </View>
-            <Text style={{marginTop: 15}}>DETAILS</Text>
+            <Text style={{marginTop: 25}}>DETAILS</Text>
             <TextInput
               placeholder="Door no,Floor,Building Name"
               style={Styles.placeholder}
@@ -159,7 +176,13 @@ export default class MapScreen extends Component {
                   style={[
                     this.state.home == '' ? Styles.label : Styles.labelSelected,
                   ]}>
-                  <Icon name="md-home" size={18} />
+                  <>
+                    {this.state.home == '' ? (
+                      <Icon name="md-home" size={18} />
+                    ) : (
+                      <Icon name="md-home" size={18} color="#f4511e" />
+                    )}
+                  </>
                   <Text style={{paddingLeft: 5}}>HOME</Text>
                 </View>
               </TouchableHighlight>
@@ -170,7 +193,14 @@ export default class MapScreen extends Component {
                   style={[
                     this.state.work == '' ? Styles.label : Styles.labelSelected,
                   ]}>
-                  <Icon name="md-briefcase" size={18} />
+                  <>
+                    {this.state.work == '' ? (
+                      <Icon name="md-briefcase" size={18} />
+                    ) : (
+                      <Icon name="md-briefcase" size={18} color="#f4511e" />
+                    )}
+                  </>
+
                   <Text style={{paddingLeft: 5}}>WORK</Text>
                 </View>
               </TouchableHighlight>
@@ -183,7 +213,13 @@ export default class MapScreen extends Component {
                       ? Styles.label
                       : Styles.labelSelected,
                   ]}>
-                  <Icon name="md-globe" size={18} />
+                  <>
+                    {this.state.other == '' ? (
+                      <Icon name="md-globe" size={18} />
+                    ) : (
+                      <Icon name="md-globe" size={18} color="#f4511e" />
+                    )}
+                  </>
                   <Text style={{paddingLeft: 5}}>OTHER</Text>
                 </View>
               </TouchableHighlight>
@@ -194,7 +230,6 @@ export default class MapScreen extends Component {
                   <View
                     style={{
                       flexDirection: 'row',
-                      // justifyContent: 'space-between',
                     }}>
                     <TextInput
                       placeholder="Label"
@@ -232,12 +267,13 @@ export default class MapScreen extends Component {
                 })
               }
               underlayColor="transparent">
-              <View style={Styles.proceed}>
+              <View style={Styles.addAddress}>
                 <Text
                   style={{
                     color: '#FFF',
                     fontSize: 20,
-                    fontFamily: 'Roboto-Bold',
+                    fontFamily: 'Ubuntu',
+                    fontWeight: 'bold',
                   }}>
                   ADD ADDRESS
                 </Text>
@@ -251,6 +287,22 @@ export default class MapScreen extends Component {
   render() {
     return this.state.viewOne == true ? (
       <View>
+        <View style={{flexDirection: 'row', paddingTop: 10, paddingLeft: 15}}>
+          <Icon
+            name="md-arrow-back"
+            size={25}
+            onPress={() => this.props.navigation.navigate('AddAdress')}
+          />
+          <Text
+            style={{
+              fontFamily: 'Ubuntu',
+              fontSize: 20,
+              paddingLeft: 10,
+              fontWeight: '500',
+            }}>
+            Add Address
+          </Text>
+        </View>
         <MapView
           showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
@@ -320,10 +372,26 @@ export default class MapScreen extends Component {
         </>
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text>DELIVERY LOCATION</Text>
+            <Text style={{fontFamily: 'Ubuntu', fontSize: 15}}>
+              DELIVERY LOCATION
+            </Text>
             <View style={{flexDirection: 'row'}}>
-              <Icon name="md-search" size={20} onPress={this.googleplaces} color="#f4511e"/>
-              <Text style={{color:'#f4511e'}}>Search</Text>
+              <Icon
+                name="md-search"
+                size={20}
+                onPress={this.googleplaces}
+                color="#f4511e"
+              />
+              <Text
+                style={{
+                  color: '#f4511e',
+                  fontFamily: 'Ubuntu',
+                  fontWeight: 'bold',
+                  fontSize: 15,
+                  paddingLeft: 5,
+                }}>
+                Search
+              </Text>
             </View>
           </View>
 
@@ -335,9 +403,10 @@ export default class MapScreen extends Component {
                 style={{
                   color: '#FFF',
                   fontSize: 20,
-                  fontFamily: 'Roboto-Bold',
+                  fontFamily: 'Ubuntu',
+                  fontWeight: 'bold',
                 }}>
-                PROCEED
+                Proceed
               </Text>
             </View>
           </TouchableHighlight>
@@ -352,48 +421,58 @@ const Styles = StyleSheet.create({
   map: {
     height: deviceHeight - 200,
   },
+  mapAddress: {
+    height: deviceHeight - 400,
+  },
   proceed: {
     backgroundColor: '#f4511e',
-    height: 40,
+    height: 50,
     alignItems: 'center',
-    marginTop: 28,
-    borderRadius: 10,
+    marginTop: 35,
+    borderRadius: 5,
     justifyContent: 'center',
   },
   placeholder: {
-    borderBottomColor: '#808080',
+    borderBottomColor: '#D3D3D3',
     borderBottomWidth: 0.5,
-    borderColor: '#D3D3D3',
   },
   placeholderLabel: {
-    borderBottomColor: '#808080',
+    borderBottomColor: '#D3D3D3',
     borderBottomWidth: 0.5,
-    borderColor: '#D3D3D3',
-    width:150
+    width: 150,
   },
   placeholderNumber: {
-    borderBottomColor: '#808080',
+    borderBottomColor: '#D3D3D3',
     borderBottomWidth: 0.5,
-    borderColor: '#D3D3D3',
-    width:150,
-    marginLeft:20
+    width: 150,
+    marginLeft: 20,
   },
   label: {
     flexDirection: 'row',
-    borderColor: '#000',
+    borderColor: '#D3D3D3',
     borderWidth: 1,
     borderRadius: 5,
     height: 30,
     width: 80,
     justifyContent: 'center',
+    paddingTop: 5,
   },
   labelSelected: {
     flexDirection: 'row',
-    borderColor: '#FF0000',
+    borderColor: '#f4511e',
     borderWidth: 1,
     borderRadius: 5,
     height: 30,
     width: 80,
+    justifyContent: 'center',
+    paddingTop: 5,
+  },
+  addAddress: {
+    backgroundColor: '#f4511e',
+    height: 50,
+    alignItems: 'center',
+    marginTop: 30,
+    borderRadius: 5,
     justifyContent: 'center',
   },
 });

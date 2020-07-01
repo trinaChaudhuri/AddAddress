@@ -13,18 +13,9 @@ export default class App extends Component {
           <Stack.Screen
             name="AddAdress"
             component={AddAdress}
-            options={{
-              title: 'Add an Address',
-              headerStyle: {
-                backgroundColor: '#f4511e',
-              },
-              headerTintColor: '#fff',
-              headerTitleStyle: {
-                fontWeight: 'bold',
-              },
-            }}
+            options={{headerShown: false}}
           />
-          <Stack.Screen name="MapScreen" component={MapScreen} />
+          <Stack.Screen name="MapScreen" component={MapScreen} options={{headerShown: false}}/>
         </Stack.Navigator>
       </NavigationContainer>
     );
