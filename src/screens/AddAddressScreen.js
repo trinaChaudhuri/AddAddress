@@ -92,19 +92,20 @@ export default class AddAdress extends Component {
                   flexDirection: 'row',
                   paddingLeft: 15,
                   paddingTop: 10,
+                  
                 }}>
                 <View style={{flexDirection: 'row'}}>
                   <Icon name="md-create" color={'#808080'} size={20} onPress={()=>this.props.navigation.navigate('SaveAddress')} />
-                  <Text style={{color: '#808080', paddingLeft: 5}}>Edit</Text>
+                  <Text style={{color: '#808080', paddingLeft: 15,fontFamily:'Ununtu',color: '#808080',fontSize:15}}>Edit</Text>
                 </View>
-                <View style={{flexDirection: 'row', paddingLeft: 25}}>
+                <View style={{flexDirection: 'row', paddingLeft: 40}}>
                   <Icon
                     name="md-trash"
                     color={'#808080'}
                     size={20}
                     onPress={this.delete}
                   />
-                  <Text style={{color: '#808080', paddingLeft: 5}}>Delete</Text>
+                  <Text style={{color: '#808080', paddingLeft: 15,fontFamily:'Ubuntu',color: '#808080',fontSize:15}}>Delete</Text>
                 </View>
               </View>
               <View
