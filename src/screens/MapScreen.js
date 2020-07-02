@@ -1,65 +1,64 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableHighlight,
   Platform,
+  Dimensions,
 } from 'react-native';
+import MapInput from '../components/MapInput';
+import MyMapView from '../components/MapView';
+import {
+  getLocation,
+  geocodeLocationByName,
+} from '../services/location-services';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Geolocation from '@react-native-community/geolocation';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
-import {request, PERMISSIONS} from 'react-native-permissions';
-import {deviceHeight, deviceWidth} from '../constant';
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight = Dimensions.get('window').height;
+class MapScreen extends React.Component {
+  state = {
+    region: {},
+    searchbar: false,
+  };
 
-export default class MapScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      initialPosition: {
-        latitude: 37.421998333333335,
-        longitude: -122.08400000000002,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      },
-      viewOne: true,
-      searchbar: false,
-    };
-  }
   componentDidMount() {
-    this.requestLocationPermission();
+    this.getInitialState();
+  }
+
+  getInitialState() {
+    getLocation().then(data => {
+      console.log(data);
+      this.setState({
+        region: {
+          latitude: data.latitude,
+          longitude: data.longitude,
+          latitudeDelta: 0.003,
+          longitudeDelta: 0.003,
+        },
+      });
+    });
+  }
+
+  getCoordsFromName(loc) {
+    this.setState({
+      region: {
+        latitude: loc.lat,
+        longitude: loc.lng,
+        latitudeDelta: 0.003,
+        longitudeDelta: 0.003,
+      },
+    });
+  }
+
+  onMapRegionChange(region) {
+    this.setState({region});
   }
   googleplaces = () => {
     this.setState({searchbar: !this.state.searchbar});
   };
-  requestLocationPermission = async () => {
-    while (Platform.OS == 'android') {
-      var response = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION);
-      if (response === 'granted') {
-        this.locateCurrentPosition();
-      }
-    }
-  };
-  locateCurrentPosition = () => {
-    Geolocation.getCurrentPosition(
-      position => {
-        let initialPosition = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        };
-        this.setState({initialPosition});
-      },
-      error => console.log(error.message),
-      {enableHighAccuracy: true, timeout: 2000, maximumAge: 3600000},
-    );
-  };
-  
-
   render() {
-      return(
+    return (
       <View>
         <View style={{flexDirection: 'row', paddingTop: 10, paddingLeft: 15}}>
           <Icon
@@ -77,73 +76,21 @@ export default class MapScreen extends Component {
             Add Address
           </Text>
         </View>
-        <MapView
-          showsUserLocation={true}
-          provider={PROVIDER_GOOGLE}
-          ref={map => (this._map = map)}
-          style={Styles.map}
-          initialRegion={this.state.initialPosition}>
-          <Marker
-            coordinate={{
-              latitude: this.state.initialPosition.latitude,
-              longitude: this.state.initialPosition.longitude,
-            }}
-            title={'Bangalore'}
-          />
-        </MapView>
-        <>
+        <View style={{position: 'absolute'}}>
           {this.state.searchbar && (
-            <View style={{position: 'absolute', width: deviceWidth}}>
-              <GooglePlacesAutocomplete
-                placeholder="Search"
-                minLength={2} // minimum length of text to search
-                autoFocus={false}
-                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                listViewDisplayed="true" // true/false/undefined
-                fetchDetails={true}
-                renderDescription={row => row.description} // custom description render
-                onPress={(data, details = null) => {
-                  console.log(data);
-                  console.log(details);
-                }}
-                getDefaultValue={() => {
-                  return ''; // text input default value
-                }}
-                query={{
-                  // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: 'AIzaSyBq0_41Va63cK2frNo2p9yfdZNqLL8EZ-E',
-                  language: 'en', // language of the results
-                  types: '(cities)', // default: 'geocode'
-                }}
-                styles={{
-                  description: {
-                    fontWeight: 'bold',
-                  },
-                  predefinedPlacesDescription: {
-                    color: '#1faadb',
-                  },
-                }}
-                onFail={error => console.log('err on fail', error)}
-                nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                // GoogleReverseGeocodingQuery={
-                //   {
-                //     // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                //   }
-                // }
-                GooglePlacesSearchQuery={{
-                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                  rankby: 'distance',
-                  types: 'food',
-                }}
-                filterReverseGeocodingByTypes={[
-                  'locality',
-                  'administrative_area_level_3',
-                ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                debounce={200}
-              />
+            <View style={{width: deviceWidth}}>
+              <MapInput notifyChange={loc => this.getCoordsFromName(loc)} />
             </View>
           )}
-        </>
+        </View>
+        {this.state.region['latitude'] ? (
+          <View>
+            <MyMapView
+              region={this.state.region}
+              onRegionChange={reg => this.onMapRegionChange(reg)}
+            />
+          </View>
+        ) : null}
         <View style={{padding: 24}}>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{fontFamily: 'Ubuntu', fontSize: 15}}>
@@ -170,7 +117,7 @@ export default class MapScreen extends Component {
           </View>
 
           <TouchableHighlight
-            onPress={() => this.props.navigation.navigate("SaveAddress")}
+            onPress={() => this.props.navigation.navigate('SaveAddress')}
             underlayColor="transparent">
             <View style={Styles.proceed}>
               <Text
@@ -186,10 +133,11 @@ export default class MapScreen extends Component {
           </TouchableHighlight>
         </View>
       </View>
-      )
-   
+    );
   }
 }
+
+export default MapScreen;
 const Styles = StyleSheet.create({
   map: {
     height: deviceHeight - 200,
