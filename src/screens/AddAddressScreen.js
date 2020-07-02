@@ -8,47 +8,13 @@ export default class AddAdress extends Component {
     super(props);
     this.state = {
       deleted: false,
-      data
+      data,
     };
   }
-  // componentDidMount() {
-  //   this.updateDelete;
-  // }
-  // updateDelete = () => {
-  //   this.setState({
-  //     deleted: false,
-  //   });
-  // };
-  // componentWillUnmount() {
-  //   this.updateDelete;
-  // }
-  delete = () => {
-    this.setState({
-      deleted: !this.state.deleted,
-    });
-  };
-  addressCard = () => {
-    if (this.props.route.params.home) {
-      return <Text style={Style.label}>{this.props.route.params.home}</Text>;
-    } else if (this.props.route.params.work) {
-      return (
-        <>
-          <Text style={Style.label}>{this.props.route.params.work}</Text>
-        </>
-      );
-    } else
-      return (
-        <>
-          <Text style={Style.label}>
-            {this.props.route.params.label.charAt(0).toUpperCase() +
-              this.props.route.params.label.slice(1)}
-          </Text>
-          <Text style={Style.addressText}>
-            {this.props.route.params.name.charAt(0).toUpperCase() +
-              this.props.route.params.name.slice(1)}
-          </Text>
-        </>
-      );
+  delete = item => {
+    const deletedItem = this.state.data;
+    deletedItem.splice(deletedItem.indexOf(item), 1);
+    this.setState({data: deletedItem});
   };
   render() {
     return (
@@ -66,71 +32,73 @@ export default class AddAdress extends Component {
           </View>
         </TouchableHighlight>
         <View style={Style.addressCard}>
-          {this.state.data && this.state.data.map(item => (
-            <>
-              <View>
-                <Text style={Style.label}>{item.label}</Text>
-                <View style={{paddingTop: 10}}>
-                  <Text style={Style.addressText}>{item.addressLine1}</Text>
-                  <Text style={Style.addressText}>{item.addressLine2}</Text>
+          {this.state.data &&
+            this.state.data.map(item => (
+              <>
+                <View>
+                  <Text style={Style.label}>{item.label}</Text>
+                  <View style={{paddingTop: 10}}>
+                    <Text style={Style.addressText}>{item.addressLine1}</Text>
+                    <Text style={Style.addressText}>{item.addressLine2}</Text>
+                  </View>
                 </View>
-              </View>
 
-              <View
-                style={{
-                  flexDirection: 'row',
-                  paddingLeft: 15,
-                  paddingTop: 10,
-                }}>
-                <View style={{flexDirection: 'row'}}>
-                  <Icon
-                    name="md-create"
-                    color={'#808080'}
-                    size={20}
-                    onPress={() =>
-                      this.props.navigation.navigate('SaveAddress')
-                    }
-                  />
-                  <Text
-                    style={{
-                      color: '#808080',
-                      paddingLeft: 15,
-                      fontFamily: 'Ununtu',
-                      color: '#808080',
-                      fontSize: 15,
-                    }}>
-                    Edit
-                  </Text>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    paddingLeft: 15,
+                    paddingTop: 10,
+                  }}>
+                  <View style={{flexDirection: 'row'}}>
+                    <Icon
+                      name="md-create"
+                      color={'#808080'}
+                      size={20}
+                      onPress={() =>
+                        this.props.navigation.navigate('SaveAddress')
+                      }
+                    />
+                    <Text
+                      style={{
+                        color: '#808080',
+                        paddingLeft: 15,
+                        fontFamily: 'Ununtu',
+                        color: '#808080',
+                        fontSize: 15,
+                      }}>
+                      Edit
+                    </Text>
+                  </View>
+                  <View style={{flexDirection: 'row', paddingLeft: 40}}>
+                    <Icon
+                      name="md-trash"
+                      id={item.id}
+                      color={'#808080'}
+                      size={20}
+                      onPress={() => this.delete(item)}
+                    />
+                    <Text
+                      style={{
+                        color: '#808080',
+                        paddingLeft: 15,
+                        fontFamily: 'Ubuntu',
+                        color: '#808080',
+                        fontSize: 15,
+                      }}>
+                      Delete
+                    </Text>
+                  </View>
                 </View>
-                <View style={{flexDirection: 'row', paddingLeft: 40}}>
-                  <Icon
-                    name="md-trash"
-                    color={'#808080'}
-                    size={20}
-                    onPress={this.delete}
-                  />
-                  <Text
-                    style={{
-                      color: '#808080',
-                      paddingLeft: 15,
-                      fontFamily: 'Ubuntu',
-                      color: '#808080',
-                      fontSize: 15,
-                    }}>
-                    Delete
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  borderBottomColor: '#D3D3D3',
-                  borderBottomWidth: 1,
-                  paddingTop: 15,
-                  marginLeft: 15,
-                }}
-              />
-            </>
-          ))}
+                <View
+                  style={{
+                    borderBottomColor: '#D3D3D3',
+                    borderBottomWidth: 1,
+                    paddingTop: 15,
+                    marginLeft: 15,
+                  }}
+                />
+              </>
+            ))}
         </View>
       </View>
     );

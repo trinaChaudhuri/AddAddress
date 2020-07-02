@@ -57,7 +57,6 @@ export default class MapScreen extends Component {
     );
   };
   
-      underlayColor="transparent"
 
   render() {
       return(
@@ -112,7 +111,7 @@ export default class MapScreen extends Component {
                 }}
                 query={{
                   // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: 'AIzaSyClIZfAUWZCJz75gwiPOWGWdP4uo52X87c',
+                  key: 'AIzaSyBq0_41Va63cK2frNo2p9yfdZNqLL8EZ-E',
                   language: 'en', // language of the results
                   types: '(cities)', // default: 'geocode'
                 }}
