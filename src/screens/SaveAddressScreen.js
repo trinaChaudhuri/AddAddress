@@ -23,12 +23,13 @@ export default class SaveAddress extends Component {
       addressLine1: '',
       addressLine2: '',
       home: '',
-      work: '',
-      label: '',
+      work: false,
+      label: false,
       number: '',
       name: '',
       other: false,
       selected: null,
+      highlight: null,
     };
   }
   handleChangeaddressLine1 = event => {
@@ -60,25 +61,28 @@ export default class SaveAddress extends Component {
     this.setState({name: event.nativeEvent.text});
   };
   home = () => {
-    if(this.state.home) {
-      this.setState({home: '', selected: null})
-    } else {
-      this.setState({home: 'Home', selected: 'home'});
-    }
+    // if(this.state.home) {
+    //   this.setState({home: '', selected: null})
+    // } else {
+    //   this.setState({home: 'Home', selected: 'home'});
+    // }
+    this.setState({home: !this.state.home, highlight: 'home'});
   };
   work = () => {
-    if(this.state.work) {
-      this.setState({work: '', selected: null})
-    } else {
-      this.setState({work: 'Work', selected: 'work'});
-    }
+    // if(this.state.work) {
+    //   this.setState({work: '', selected: null})
+    // } else {
+    //   this.setState({work: 'Work', selected: 'work'});
+    // }
+    this.setState({work: !this.state.work, highlight: 'work'});
   };
   other = () => {
-    if(this.state.other) {
-      this.setState({other: false, selected: null})
-    } else {
-      this.setState({other: !this.state.other, selected: 'other'});
-    }
+    // if(this.state.other) {
+    //   this.setState({other: false, selected: null})
+    // } else {
+    //   this.setState({other: !this.state.other, selected: 'other'});
+    // }
+    this.setState({other: !this.state.other, highlight: 'other'});
   };
   render() {
     return (
@@ -141,16 +145,19 @@ export default class SaveAddress extends Component {
               <TouchableHighlight
                 onPress={this.home}
                 underlayColor="transparent"
-                disabled={this.state.selected && this.state.selected != 'home'}>
+                // disabled={this.state.selected && this.state.selected != 'home'}
+              >
                 <View
                   style={[
-                    this.state.home == '' ? Styles.label : Styles.labelSelected,
+                    this.state.highlight == 'home'
+                      ? Styles.labelSelected
+                      : Styles.label,
                   ]}>
                   <>
-                    {this.state.home == '' ? (
-                      <Icon name="md-home" size={18} />
-                    ) : (
+                    {this.state.highlight == 'home' ? (
                       <Icon name="md-home" size={18} color="#f4511e" />
+                    ) : (
+                      <Icon name="md-home" size={18} />
                     )}
                   </>
                   <Text style={{paddingLeft: 5}}>HOME</Text>
@@ -159,16 +166,19 @@ export default class SaveAddress extends Component {
               <TouchableHighlight
                 onPress={this.work}
                 underlayColor="transparent"
-                disabled={this.state.selected && this.state.selected != 'work'}>
+                // disabled={this.state.selected && this.state.selected != 'work'}
+              >
                 <View
                   style={[
-                    this.state.work == '' ? Styles.label : Styles.labelSelected,
+                    this.state.highlight == 'work'
+                      ? Styles.labelSelected
+                      : Styles.label,
                   ]}>
                   <>
-                    {this.state.work == '' ? (
-                      <Icon name="md-briefcase" size={18} />
-                    ) : (
+                    {this.state.highlight == 'work' ? (
                       <Icon name="md-briefcase" size={18} color="#f4511e" />
+                    ) : (
+                      <Icon name="md-briefcase" size={18} />
                     )}
                   </>
 
@@ -178,20 +188,21 @@ export default class SaveAddress extends Component {
               <TouchableHighlight
                 onPress={this.other}
                 underlayColor="transparent"
-                disabled={
-                  this.state.selected && this.state.selected != 'other'
-                }>
+                // disabled={
+                //   this.state.selected && this.state.selected != 'other'
+                // }
+              >
                 <View
                   style={[
-                    this.state.other == ''
-                      ? Styles.label
-                      : Styles.labelSelected,
+                    this.state.highlight == 'other'
+                      ? Styles.labelSelected
+                      : Styles.label,
                   ]}>
                   <>
-                    {this.state.other == '' ? (
-                      <Icon name="md-globe" size={18} />
-                    ) : (
+                    {this.state.highlight == 'other' ? (
                       <Icon name="md-globe" size={18} color="#f4511e" />
+                    ) : (
+                      <Icon name="md-globe" size={18} />
                     )}
                   </>
                   <Text style={{paddingLeft: 5}}>OTHER</Text>
@@ -199,7 +210,7 @@ export default class SaveAddress extends Component {
               </TouchableHighlight>
             </View>
             <>
-              {this.state.other && (
+              {this.state.highlight == "other" && (
                 <View>
                   <View
                     style={{
@@ -229,17 +240,7 @@ export default class SaveAddress extends Component {
               )}
             </>
             <TouchableHighlight
-              onPress={() =>
-                this.props.navigation.navigate('AddAdress', {
-                  addressLine1: this.state.addressLine1,
-                  addressLine2: this.state.addressLine2,
-                  home: this.state.home,
-                  work: this.state.work,
-                  label: this.state.label,
-                  number: this.state.number,
-                  name: this.state.name,
-                })
-              }
+              onPress={() => this.props.navigation.navigate('AddAdress')}
               underlayColor="transparent">
               <View style={Styles.addAddress}>
                 <Text
@@ -249,7 +250,7 @@ export default class SaveAddress extends Component {
                     fontFamily: 'Ubuntu',
                     fontWeight: 'bold',
                   }}>
-                  ADD ADDRESS
+                  Add Address
                 </Text>
               </View>
             </TouchableHighlight>

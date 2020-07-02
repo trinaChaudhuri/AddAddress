@@ -2,29 +2,30 @@ import React, {Component} from 'react';
 import {View, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {deviceWidth, deviceHeight} from '../constant';
-
+import {data} from '../data';
 export default class AddAdress extends Component {
   constructor(props) {
     super(props);
     this.state = {
       deleted: false,
+      data
     };
   }
-  componentDidMount(){
-    this.updateDelete;
-  }
-  updateDelete=()=>{
-    this.setState({
-      deleted:false
-    })
-  }
-  componentWillUnmount(){
-    this.updateDelete;
-  }
+  // componentDidMount() {
+  //   this.updateDelete;
+  // }
+  // updateDelete = () => {
+  //   this.setState({
+  //     deleted: false,
+  //   });
+  // };
+  // componentWillUnmount() {
+  //   this.updateDelete;
+  // }
   delete = () => {
     this.setState({
-      deleted:!this.state.deleted
-    })
+      deleted: !this.state.deleted,
+    });
   };
   addressCard = () => {
     if (this.props.route.params.home) {
@@ -50,53 +51,56 @@ export default class AddAdress extends Component {
       );
   };
   render() {
-    console.log('params',this.props.route.params,'deleted',this.state.deleted)
     return (
       <View style={Style.container}>
         <View style={Style.addAddressHeader}>
           <Text style={Style.myAddresses}>My Addresses</Text>
         </View>
-        <View style={Style.textView}>
-          <Icon
-            name="md-add"
-            size={22}
-            color={'#f4511e'}
-            onPress={() => this.props.navigation.navigate('MapScreen')}
-          />
-          <TouchableHighlight
-            onPress={() => this.props.navigation.navigate('MapScreen')} underlayColor="transparent">
-            <Text style={Style.textColor}>Add New Address</Text>
-          </TouchableHighlight>
-        </View>
+        <TouchableHighlight
+          onPress={() => this.props.navigation.navigate('MapScreen')}
+          underlayColor="transparent">
+          <View style={Style.textView}>
+            <Icon name="md-add" size={22} color={'#f4511e'} />
 
-        <>
-          {this.props.route.params && !this.state.deleted  && (
-            <View style={Style.addressCard}>
-              <>{this.addressCard()}</>
-              <View style={{paddingTop: 10}}>
-                <Text style={Style.addressText}>
-                  {this.props.route.params.addressLine1
-                    .charAt(0)
-                    .toUpperCase() +
-                    this.props.route.params.addressLine1.slice(1)}
-                </Text>
-                <Text style={Style.addressText}>
-                  {this.props.route.params.addressLine2
-                    .charAt(0)
-                    .toUpperCase() +
-                    this.props.route.params.addressLine2.slice(1)}
-                </Text>
+            <Text style={Style.textColor}>Add New Address</Text>
+          </View>
+        </TouchableHighlight>
+        <View style={Style.addressCard}>
+          {this.state.data && this.state.data.map(item => (
+            <>
+              <View>
+                <Text style={Style.label}>{item.label}</Text>
+                <View style={{paddingTop: 10}}>
+                  <Text style={Style.addressText}>{item.addressLine1}</Text>
+                  <Text style={Style.addressText}>{item.addressLine2}</Text>
+                </View>
               </View>
+
               <View
                 style={{
                   flexDirection: 'row',
                   paddingLeft: 15,
                   paddingTop: 10,
-                  
                 }}>
                 <View style={{flexDirection: 'row'}}>
-                  <Icon name="md-create" color={'#808080'} size={20} onPress={()=>this.props.navigation.navigate('SaveAddress')} />
-                  <Text style={{color: '#808080', paddingLeft: 15,fontFamily:'Ununtu',color: '#808080',fontSize:15}}>Edit</Text>
+                  <Icon
+                    name="md-create"
+                    color={'#808080'}
+                    size={20}
+                    onPress={() =>
+                      this.props.navigation.navigate('SaveAddress')
+                    }
+                  />
+                  <Text
+                    style={{
+                      color: '#808080',
+                      paddingLeft: 15,
+                      fontFamily: 'Ununtu',
+                      color: '#808080',
+                      fontSize: 15,
+                    }}>
+                    Edit
+                  </Text>
                 </View>
                 <View style={{flexDirection: 'row', paddingLeft: 40}}>
                   <Icon
@@ -105,7 +109,16 @@ export default class AddAdress extends Component {
                     size={20}
                     onPress={this.delete}
                   />
-                  <Text style={{color: '#808080', paddingLeft: 15,fontFamily:'Ubuntu',color: '#808080',fontSize:15}}>Delete</Text>
+                  <Text
+                    style={{
+                      color: '#808080',
+                      paddingLeft: 15,
+                      fontFamily: 'Ubuntu',
+                      color: '#808080',
+                      fontSize: 15,
+                    }}>
+                    Delete
+                  </Text>
                 </View>
               </View>
               <View
@@ -116,9 +129,9 @@ export default class AddAdress extends Component {
                   marginLeft: 15,
                 }}
               />
-            </View>
-          )}
-        </>
+            </>
+          ))}
+        </View>
       </View>
     );
   }
